@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViVuDi - Real People. Real Places. Real-Time</title>
+    <meta name="description" content="Mạng xã hội du lịch xác thực. Khám phá địa điểm hidden gems xung quanh bạn.">
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            /* UPDATED: New Primary Color */
+            --primary: #FF678B;
+            /* UPDATED: Darker pink for gradients/hover */
+            --secondary: #E64A6B;
+            --accent: #F59E0B;
+            --dark: #0f172a;
+            --light: #FFF0F3;
+            /* UPDATED: Very light pink background tint */
+            --white: #FFFFFF;
+            --gray: #64748B;
+            --phone-border: #1E293B;
+        }
+
+        /* --- SỬA ĐOẠN LOGO NÀY --- */
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: -1px;
+            /* Thêm 2 dòng này để icon và chữ nằm ngang hàng */
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- THÊM CLASS MỚI NÀY ĐỂ BO GÓC ẢNH --- */
+        .logo-img {
+            width: 45px;
+            /* Kích thước icon */
+            height: 45px;
+            margin-right: 10px;
+            /* Khoảng cách với chữ ViVuDi */
+            border-radius: 12px;
+            /* ĐÂY LÀ CHỖ BO GÓC (Tăng giảm số này để bo nhiều/ít) */
+            /* Nếu muốn bo tròn hoàn toàn thành hình tròn thì dùng: border-radius: 50%; */
+            object-fit: cover;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* --- UTILITIES --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            /* UPDATED shadow color to match pink */
+            box-shadow: 0 4px 12px rgba(255, 103, 139, 0.3);
+            border: 2px solid transparent;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            background-color: var(--secondary);
+            box-shadow: 0 8px 20px rgba(255, 103, 139, 0.4);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--dark);
+            color: var(--dark);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--dark);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-subtitle {
+            color: var(--gray);
+            margin-bottom: 4rem;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- ANIMATIONS --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* NEW Animation for flat phone */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* --- HEADER --- */
+        header {
+            padding: 20px 0;
+            position: absolute;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            min-height: 100vh;
+            padding-top: 100px;
+            /* UPDATED: Gradient to match pink theme */
+            background: radial-gradient(circle at top right, #FFE4E9 0%, #fff 40%);
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            color: var(--dark);
+            letter-spacing: -1.5px;
+        }
+
+        .hero-content h1 span {
+            /* UPDATED gradient text */
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            margin-bottom: 40px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            /* UPDATED tag colors */
+            background: #FFEDF0;
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* --- PHONE MOCKUP (UPDATED - FLAT) --- */
+        .hero-image {
+            display: flex;
+            justify-content: center;
+            /* Removed perspective */
+        }
+
+        .phone-mockup {
+            width: 300px;
+            height: 600px;
+            background: #000;
+            border-radius: 40px;
+            position: relative;
+            /* UPDATED: Removed 3D transform and layered shadows */
+            border: 4px solid var(--phone-border);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            /* Simple soft shadow */
+            /* Added floating animation for visual interest */
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Removed hover state that reset transform */
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 35px;
+            overflow: hidden;
+            background: #121212;
+            position: relative;
+        }
+
+        .phone-screen-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 25px;
+            background: var(--phone-border);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            z-index: 10;
+        }
+
+        /* --- TECH STACK --- */
+        .tech-stack {
+            background: var(--white);
+            border-bottom: 1px solid #eee;
+            padding: 40px 0;
+        }
+
+        .tech-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            opacity: 0.7;
+        }
+
+        .tech-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: var(--dark);
+        }
+
+        .tech-item i {
+            font-size: 1.6rem;
+        }
+
+        /* --- FEATURES --- */
+        .features {
+            background: var(--light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            padding: 40px;
+            border-radius: 24px;
+            background: var(--white);
+            transition: 0.3s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        /* UPDATED: Icon box colors to match pink theme */
+        .icon-box {
+            width: 64px;
+            height: 64px;
+            background: #FFEDF0;
+            /* Light pink bg */
+            color: var(--primary);
+            /* Pink icon */
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+        }
+
+        /* Keep these contrasting colors */
+        .feature-card:nth-child(2) .icon-box {
+            background: #DCFCE7;
+            color: #16A34A;
+        }
+
+        .feature-card:nth-child(3) .icon-box {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        /* --- APP GALLERY UPDATED --- */
+        .gallery {
+            background: var(--white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            /* Tự động chia cột: Tối thiểu 250px/cột */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .gallery-item {
+            border-radius: 20px;
+            overflow: hidden;
+            background: #f1f5f9;
+            /* Chiều cao cố định để các ảnh bằng nhau */
+            height: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border: 1px solid #eee;
+            transition: transform 0.3s ease;
+        }
+
+        /* Hiệu ứng zoom nhẹ khi di chuột vào */
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            /* Quan trọng: Cắt ảnh để lấp đầy khung mà không bị méo */
+            object-fit: cover;
+            object-position: top center;
+            /* Ưu tiên hiển thị phần trên của ảnh (thường là header app) */
+            transition: transform 0.5s ease;
+        }
+
+        /* Zoom ảnh bên trong khi hover */
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Caption mờ bên dưới (Optional - cho đẹp) */
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: white;
+            padding: 20px;
+            padding-top: 40px;
+            font-weight: 600;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-caption {
+            opacity: 1;
+        }
+
+        /* --- CTA SECTION --- */
+        .cta-section {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231e293b' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .cta-content {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-white {
+            background: var(--white);
+            color: var(--dark);
+            padding: 16px 40px;
+            font-size: 1.1rem;
+        }
+
+        .btn-white:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 60px 0;
+            background: #020617;
+            color: #94a3b8;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer-flex {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #94a3b8;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.8rem;
+            }
+
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-image {
+                margin-top: 50px;
+            }
+
+            .nav-flex {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container nav-flex">
+            <a href="#" class="logo">ViVuDi<span style="color:var(--accent)">.</span></a>
+
+            <div class="nav-actions">
+                <a href="https://forms.gle/t26aAx51wnu2uA2m6" target="_blank" class="btn btn-primary">
+                    <i class="fas fa-poll" style="margin-right: 8px;"></i> Làm khảo sát
+                </a>
+
+                <a href="https://github.com/L01-HaiThanh-Fanclub-VIVUDI/L01-HaiThanh-Fanclub-VIVUDI-VIVUDI-frontent" target="_blank" class="btn btn-outline">
+                    <i class="fab fa-github" style="margin-right: 8px;"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content reveal active">
+                <div class="hero-tag">
+                    Mobile Development
+                </div>
+                <h1>Real People.<br>Real Places.<br><span>Real-Time.</span></h1>
+                <p>Khám phá "hidden gems" xung quanh bạn với review được xác thực bởi GPS. Nền tảng kết nối những người
+                    đam mê xê dịch thực thụ.</p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                    <a href="#features" class="btn btn-primary" style="padding: 14px 32px;">Xem tính năng</a>
+                    <a href="#gallery" class="btn btn-outline"
+                        style="margin:0; border-radius: 50px; padding: 14px 32px;">Screenshots</a>
+                </div>
+            </div>
+
+            <div class="hero-image reveal active" style="transition-delay: 0.2s;">
+                <div class="phone-mockup">
+                    <div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <img src="map.png" alt="ViVuDi Map Interface" class="phone-screen-img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="tech-stack">
+        <div class="container">
+            <p class="text-center"
+                style="margin-bottom: 20px; font-size: 0.9rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px;">
+                Built with modern technologies</p>
+            <div class="tech-grid">
+                <div class="tech-item"><i class="fab fa-react" style="color:#61DAFB"></i> React Native</div>
+                <div class="tech-item"><i class="fab fa-node-js" style="color:#E0234E"></i> NestJS</div>
+                <div class="tech-item"><i class="fab fa-docker" style="color:#2496ED"></i> Docker</div>
+                <div class="tech-item"><i class="fas fa-database" style="color:#336791"></i> PostgreSQL</div>
+                <div class="tech-item"><i class="fas fa-map-location-dot" style="color:#4285F4"></i> Google Maps API
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="features" class="section-padding features">
+        <div class="container">
+            <div class="text-center reveal">
+                <h2 class="section-title">Tính năng nổi bật</h2>
+                <p class="section-subtitle">Tập trung vào trải nghiệm thực tế và cộng đồng địa phương.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="icon-box"><i class="fas fa-location-dot"></i></div>
+                    <h3>Bản đồ tương tác</h3>
+                    <p>Không danh sách nhàm chán. Tất cả địa điểm hiển thị trực quan trên bản đồ. Chạm là thấy, thấy là
+                        đi.</p>
+                </div>
+
+                <div class="feature-card reveal" style="transition-delay: 0.1s;">
+                    <div class="icon-box"><i class="fas fa-shield-alt"></i></div>
+                    <h3>Xác thực GPS</h3>
+                    <p>Chống review ảo. Hệ thống yêu cầu người dùng phải có mặt tại địa điểm (Check-in GPS) mới được
+                        viết đánh giá.</p>
+                </div>
+
+                <div class="feature-card reveal" style="transition-delay: 0.2s;">
+                    <div class="icon-box"><i class="fas fa-random"></i></div>
+                    <h3>Daily Random</h3>
+                    <p>Hôm nay đi đâu? Một cú chạm, ViVuDi sẽ gợi ý ngẫu nhiên một địa điểm thú vị gần bạn.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="section-padding gallery">
+        <div class="container">
+            <div class="text-center reveal">
+                <h2 class="section-title">Giao diện người dùng</h2>
+                <p class="section-subtitle">Thiết kế tối giản, tập trung vào nội dung.</p>
+            </div>
+
+            <div class="gallery-grid">
+                <div class="gallery-grid">
+                    <div class="gallery-item reveal">
+                        <img src="home.png" alt="ViVuDi Home Feed">
+                        <div class="gallery-caption">Home Feed</div>
+                    </div>
+
+                    <div class="gallery-item reveal" style="transition-delay: 0.1s;">
+                        <img src="inter_map.png" alt="Interactive Map">
+                        <div class="gallery-caption">Interactive Map</div>
+                    </div>
+
+                    <div class="gallery-item reveal" style="transition-delay: 0.2s;">
+                        <img src="map_detail.png" alt="Location Detail">
+                        <div class="gallery-caption">Location Detail</div>
+                    </div>
+
+                    <div class="gallery-item reveal" style="transition-delay: 0.3s;">
+                        <img src="profile.png" alt="User Profile">
+                        <div class="gallery-caption">User Profile</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding cta-section">
+        <div class="container reveal">
+            <div class="cta-content">
+                <h2 class="cta-title">Sẵn sàng trải nghiệm?</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 40px; color: #cbd5e1;">ViVuDi đang trong giai đoạn phát
+                    triển (MVP). Mã nguồn được công khai trên GitHub.</p>
+                <a href="https://github.com/khoale2k4" class="btn btn-white">
+                    <i class="fab fa-github" style="margin-right: 10px;"></i> Tải APK
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-flex">
+                <div class="footer-col" style="flex: 2; min-width: 300px;">
+                    <h4 style="font-size: 1.5rem; color: var(--primary);">ViVuDi.</h4>
+                    <p>
+                        Real People.
+                        Real Places.
+                        Real-Time.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Liên kết</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Về dự án</a></li>
+                        <li><a href="#">Tính năng</a></li>
+                        <li><a href="#">Lộ trình</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Kết nối</h4>
+                    <div class="social-links">
+                        <a href="https://github.com/L01-HaiThanh-Fanclub-VIVUDI/L01-HaiThanh-Fanclub-VIVUDI-VIVUDI-frontent" style="color:white; font-size: 1.5rem;"><i
+                                class="fab fa-github"></i></a>
+                        <a href="#" style="color:white; font-size: 1.5rem; margin-left: 15px;"><i
+                                class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div
+                style="margin-top: 50px; padding-top: 20px; border-top: 1px solid #1e293b; text-align: center; font-size: 0.9rem;">
+                &copy; 2026 ViVuDi Project. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', reveal);
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        reveal();
+    </script>
+</body>
+
+</html>
